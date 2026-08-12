@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studien-Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<main class="container">
+    <h1>Mein Studien-Dashboard</h1>
+    <section class="info-card">
+        <h2>Studieninformationen</h2>
+
+        <div class="info-grid">
+            <p>
+                <span class="info-label">Name</span>
+                <strong>{{ student.name }}</strong>
+            </p>
+
+            <p>
+                <span class="info-label">Studiengang</span>
+                <strong>{{ student.studiengang.studienfach }}</strong>
+            </p>
+
+            <p>
+                <span class="info-label">Studienbeginn</span>
+                <strong>{{ student.start_datum }}</strong>
+            </p>
+
+            <p>
+                <span class="info-label">Anzahl Semester</span>
+                <strong>{{ student.studiengang.semester_liste|length }}</strong>
+            </p>
+        </div>
+    </section>
+
+<div class="kennzahlen-grid">
+
+    <section class="kennzahl-karte">
+        <h2>Notenübersicht</h2>
+
+        {% if durchschnitt is not none %}
+            <p>
+                Aktueller Notendurchschnitt:
+                <strong class="kennzahl-wert">{{ durchschnitt }}</strong>
+            </p>
+        {% else %}
+            <p>Aktueller Notendurchschnitt: Noch keine Noten vorhanden</p>
+        {% endif %}
+
+        <p> Zielnotendurchschnitt: {{ student.ziel_notendurchschnitt }}</p>
+        <p><strong>{{ notenziel_status }}</strong></p>
+    </section>
+
+    <section class="kennzahl-karte">
+
+        <h2>Studienfortschritt</h2>
+
+
+        <p>
+            Abgeschlossene ECTS:
+            <strong class="kennzahl-wert">
+                {{ abgeschlossene_ects }} / {{ student.studiengang.gesamt_ects }}
+            </strong>
+        </p>
+
+        <progress
+            class="ects-fortschrittsbalken"
+            value="{{ abgeschlossene_ects }}"
+            max="{{ student.studiengang.gesamt_ects }}"
+
+        >
+            {{ ects_fortschritt_prozent }} %
+        </progress>
+
+        <p class="ects-prozent">
+            {{ ects_fortschritt_prozent }} % abgeschlossen
+        </p>
+
+        {% if not studienplan_vollstaendig %}
+        <p>
+            <strong>Warnung:</strong>
+            Im Studienplan sind nur {{ erfasste_gesamt_ects }}
+            von {{ student.studiengang.gesamt_ects }} ECTS eingetragen.
+        </p>
+        {% endif %}
+
+        <p>
+            ECTS laut aktuellem Zeitplan:
+            {{ soll_ects}}
+        </p>
+
+        <p>
+            Abweichung vom Zeitplan:
+            {{ ects_differenz }} ECTS
+        </p>
+
+        <p>
+            status:
+            <strong class="{{ 'status-negativ' if ects_differenz < 0 else 'status-positiv' }}">
+                {{ fortschritt_status }}
+            </strong>
+        </p>
+
+    </section>
+
+</div>
+
+    <section class="pruefungsbereich">
+
+        <h2>Prüfungsleistung eintragen</h2>
+
+        <form
+                method="post"
+                action="{{ url_for('pruefungsleistung_eintragen') }}"
+        >
+            <p>
+                <label for="modul_id">Modul auswählen:</label>
+
+                <select id="modul_id" name="modul_id" required>
+                    {% for semester in student.studiengang.semester_liste %}
+                    <optgroup label="Semester {{ semester.semester_nr }}">
+                        {% for modul in semester.modul_liste %}
+                        <option value="{{ modul.modul_id }}">
+                            {{ modul.name }}
+                        </option>
+                        {% endfor %}
+                    </optgroup>
+                    {% endfor %}
+                </select>
+            </p>
+
+            <p>
+                <label for="note">Note:</label>
+
+                <input
+                        type="text"
+                        id="note"
+                        name="note"
+                        placeholder="zum Beispiel 1,7"
+                        required
+                >
+            </p>
+
+            <button type="submit">Prüfungsleistung speichern</button>
+        </form>
+
+        {% for semester in student.studiengang.semester_liste %}
+
+        <details>
+            <summary>
+                <strong>Semester {{ semester.semester_nr }}</strong>
+            </summary>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Modul</th>
+                    <th>ECTS</th>
+                    <th>Status</th>
+                    <th>Note</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for modul in semester.modul_liste%}
+                <tr>
+                    <td>{{ modul.name }}</td>
+                    <td>{{ modul.ects }}</td>
+                    <td>{{ modul.status }}</td>
+                    <td>{{ noten.get(modul.modul_id, "-") }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </details>
+
+        {% endfor %}
+    </section>
+</main>
+</body>
+</html>
+
