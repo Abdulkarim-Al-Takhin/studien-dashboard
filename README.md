@@ -19,7 +19,7 @@ Das Dashboard überwacht den aktuellen Notendurchschnitt, den Studienfortschritt
 
 ## Verwendete Technologien
 
-- Python 3.14
+- Python 3.13
 - Flask 3.1.3
 - HTML5
 - CSS3
@@ -29,7 +29,7 @@ Das Dashboard überwacht den aktuellen Notendurchschnitt, den Studienfortschritt
 ## Voraussetzungen
 
 - Windows 10 oder Windows 11
-- Python 3.13 oder neuer
+- Python 3.13 
 - Git
 - Ein aktueller Webbrowser
 
