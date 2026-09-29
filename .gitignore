@@ -1,4 +1,6 @@
 .venv/
 .idea/
-__pycach__/
+__pycache__/
 *.pyc
+.pytest_cache/
+.venv_phase3_test/

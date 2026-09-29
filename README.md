@@ -14,6 +14,7 @@ Das Dashboard überwacht den aktuellen Notendurchschnitt, den Studienfortschritt
 - Grafischer ECTS-Fortschrittsbalken
 - Prüfung, ob der Studienfortschritt im Zeitplan liegt
 - Speicherung der Prüfungsleistungen in einer JSON-Datei
+- Validierung anhand eines festen Notenkatalogs
 - Responsives dunkelgraues Webdesign
 
 ## Verwendete Technologien
@@ -74,15 +75,25 @@ http://127.0.0.1:5000
 ```text
 studien-dashboard/
 ├── app.py
+├── controllers.py
 ├── models.py
 ├── repository.py
+├── services.py
+├── study_plan.py
 ├── requirements.txt
 ├── data/
 │   └── pruefungsleistungen.json
+├── docs/
+│   ├── gesamtarchitektur.puml
+│   └── gesamtarchitektur.svg
 ├── static/
 │   └── style.css
-└── templates/
-    └── dashboard.html
+├── templates/
+│   └── dashboard.html
+└── tests/
+    ├── test_app.py
+    ├── test_models.py
+    └── test_repository.py
 ```
 
 ## Datenspeicherung
@@ -92,7 +103,8 @@ Die Prüfungsleistungen werden dauerhaft in der Datei `data/pruefungsleistungen.
 ## Bedienung
 
 1. Im Notenformular ein Modul auswählen
-2. Eine Note zwischen `1,0` und `6,0` eingeben.
+2. Eine zulässige Note auswählen. Vorgesehen sind Zehntelnoten von `1,0` bis
+   `4,0` sowie `5,0`. Die Noten `1,0` bis `4,0` gelten als bestanden.
 3. Auf **Prüfungsleistung speichern** klicken.
 4. Das Dashboard aktualisiert automatisch den Notendurchschnitt, die abgeschlossenen ECTS-Punkte und den Studienfortschritt.
 5. Die Semesterbereiche können aufgeklappt werden, um die einzelnen Module und Prüfungsleistungen anzuzeigen.
@@ -102,3 +114,24 @@ Die Prüfungsleistungen werden dauerhaft in der Datei `data/pruefungsleistungen.
 - Abdulkarim Al Takhin
 - Studiengang: Angewandte Künstliche Intelligenz
 - IU Internationale Hochschule
+
+## Architektur
+
+Der Prototyp trennt die Verantwortlichkeiten in fünf Bereiche:
+
+- `models.py`: Domainklassen, Statuswerte und Notenvalidierung
+- `study_plan.py`: Aufbau der Beispieldaten und des Studienplans
+- `repository.py`: Laden und Speichern validierter Prüfungsleistungen
+- `services.py`: Berechnungen und Anwendungslogik
+- `controllers.py`: Verarbeitung der HTTP-Anfragen
+- `app.py`: Programmeinstieg und Verbindung der Bestandteile
+- `templates/` und `static/`: Darstellung und Gestaltung
+
+## Automatisierte Tests
+
+Die Domainlogik, Persistenz und Web-Routen werden mit der Python-
+Standardbibliothek getestet:
+
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+```

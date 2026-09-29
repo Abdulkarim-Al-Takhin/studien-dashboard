@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1250" viewBox="0 0 1800 1250">
+  <defs>
+    <style>
+      .title { font: 700 34px Arial, sans-serif; fill: #172033; }
+      .layer { font: 700 21px Arial, sans-serif; fill: #254f86; }
+      .name { font: 700 18px Arial, sans-serif; fill: #172033; }
+      .stereo { font: italic 14px Arial, sans-serif; fill: #526071; }
+      .item { font: 14px Consolas, monospace; fill: #263343; }
+      .label { font: 13px Arial, sans-serif; fill: #3d4a5a; }
+      .box { fill: white; stroke: #42526a; stroke-width: 2; rx: 8; }
+      .head { fill: #e8f0fb; }
+      .pkg { fill: #f7f9fc; stroke: #9aacbf; stroke-width: 2; rx: 12; }
+      .line { stroke: #42526a; stroke-width: 2; fill: none; }
+      .dash { stroke-dasharray: 8 6; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#42526a"/>
+    </marker>
+    <marker id="diamond" markerWidth="14" markerHeight="10" refX="2" refY="5" orient="auto">
+      <path d="M1,5 L6,1 L11,5 L6,9 z" fill="#42526a"/>
+    </marker>
+    <marker id="openDiamond" markerWidth="14" markerHeight="10" refX="2" refY="5" orient="auto">
+      <path d="M1,5 L6,1 L11,5 L6,9 z" fill="white" stroke="#42526a" stroke-width="1.5"/>
+    </marker>
+  </defs>
+
+  <rect width="1800" height="1250" fill="#ffffff"/>
+  <text x="900" y="48" text-anchor="middle" class="title">Gesamt-UML des Studien-Dashboard-Prototyps</text>
+
+  <rect x="40" y="78" width="1720" height="210" class="pkg"/>
+  <text x="62" y="108" class="layer">Programmeinstieg und Web</text>
+
+  <g transform="translate(75 128)">
+    <rect width="300" height="125" class="box"/><rect width="300" height="42" class="head" rx="8"/>
+    <text x="150" y="20" text-anchor="middle" class="stereo">&lt;&lt;module&gt;&gt;</text><text x="150" y="38" text-anchor="middle" class="name">app.py</text>
+    <line x1="0" y1="43" x2="300" y2="43" class="line"/><text x="12" y="72" class="item">+ create_app(...): Flask</text><text x="12" y="99" class="item">+ app: Flask</text>
+  </g>
+  <g transform="translate(450 128)">
+    <rect width="350" height="125" class="box"/><rect width="350" height="42" class="head" rx="8"/>
+    <text x="175" y="20" text-anchor="middle" class="stereo">&lt;&lt;controller&gt;&gt;</text><text x="175" y="38" text-anchor="middle" class="name">DashboardController</text>
+    <line x1="0" y1="43" x2="350" y2="43" class="line"/><text x="12" y="70" class="item">+ registriere_routen(app)</text><text x="12" y="95" class="item">+ dashboard()</text><text x="12" y="118" class="item">+ pruefungsleistung_eintragen()</text>
+  </g>
+  <g transform="translate(875 128)">
+    <rect width="310" height="125" class="box"/><rect width="310" height="42" class="head" rx="8"/>
+    <text x="155" y="20" text-anchor="middle" class="stereo">&lt;&lt;view&gt;&gt;</text><text x="155" y="38" text-anchor="middle" class="name">dashboard.html</text>
+    <line x1="0" y1="43" x2="310" y2="43" class="line"/><text x="12" y="74" class="item">zeigt Dashboarddaten</text><text x="12" y="101" class="item">sendet Formulardaten</text>
+  </g>
+  <g transform="translate(1260 128)">
+    <rect width="250" height="125" class="box"/><rect width="250" height="42" class="head" rx="8"/>
+    <text x="125" y="20" text-anchor="middle" class="stereo">&lt;&lt;stylesheet&gt;&gt;</text><text x="125" y="38" text-anchor="middle" class="name">style.css</text>
+    <line x1="0" y1="43" x2="250" y2="43" class="line"/><text x="12" y="78" class="item">responsive Gestaltung</text>
+  </g>
+  <g transform="translate(1540 128)">
+    <rect width="190" height="125" class="box"/><rect width="190" height="42" class="head" rx="8"/>
+    <text x="95" y="20" text-anchor="middle" class="stereo">&lt;&lt;module&gt;&gt;</text><text x="95" y="38" text-anchor="middle" class="name">study_plan.py</text>
+    <line x1="0" y1="43" x2="190" y2="43" class="line"/><text x="10" y="74" class="item">+ erstelle_student_</text><text x="10" y="98" class="item">  mit_studienplan()</text>
+  </g>
+
+  <rect x="40" y="318" width="1720" height="230" class="pkg"/>
+  <text x="62" y="348" class="layer">Anwendungslogik und Persistenz</text>
+  <g transform="translate(245 373)">
+    <rect width="520" height="145" class="box"/><rect width="520" height="42" class="head" rx="8"/>
+    <text x="260" y="28" text-anchor="middle" class="name">DashboardService</text><line x1="0" y1="43" x2="520" y2="43" class="line"/>
+    <text x="12" y="70" class="item">- student: Student</text><text x="12" y="94" class="item">- repository: PruefungsleistungRepository</text><text x="12" y="118" class="item">+ lade_pruefungsleistungen()</text><text x="270" y="118" class="item">+ dashboard_daten()</text><text x="12" y="140" class="item">+ pruefungsleistung_eintragen(modul_code, note)</text>
+  </g>
+  <g transform="translate(1020 373)">
+    <rect width="500" height="145" class="box"/><rect width="500" height="42" class="head" rx="8"/>
+    <text x="250" y="28" text-anchor="middle" class="name">PruefungsleistungRepository</text><line x1="0" y1="43" x2="500" y2="43" class="line"/>
+    <text x="12" y="72" class="item">+ dateipfad: Path</text><text x="12" y="101" class="item">+ laden(): Dict&lt;String, Pruefungsleistung&gt;</text><text x="12" y="130" class="item">+ speichern(pruefungsleistungen): None</text>
+  </g>
+
+  <rect x="40" y="578" width="1720" height="625" class="pkg"/>
+  <text x="62" y="608" class="layer">Domain</text>
+
+  <g transform="translate(90 645)"><rect width="400" height="205" class="box"/><rect width="400" height="42" class="head" rx="8"/><text x="200" y="28" text-anchor="middle" class="name">Student</text><line x1="0" y1="43" x2="400" y2="43" class="line"/><text x="12" y="70" class="item">+ name: String</text><text x="12" y="94" class="item">+ start_datum: Date</text><text x="12" y="118" class="item">+ ziel_notendurchschnitt: Float</text><line x1="0" y1="130" x2="400" y2="130" class="line"/><text x="12" y="156" class="item">+ berechne_notendurchschnitt()</text><text x="12" y="180" class="item">+ berechne_abgeschlossene_ects()</text><text x="12" y="202" class="item">+ finde_modulbelegung(code)</text></g>
+  <g transform="translate(560 645)"><rect width="350" height="170" class="box"/><rect width="350" height="42" class="head" rx="8"/><text x="175" y="28" text-anchor="middle" class="name">Studiengang</text><line x1="0" y1="43" x2="350" y2="43" class="line"/><text x="12" y="70" class="item">+ studienfach: String</text><text x="12" y="94" class="item">+ dauer_monate: Integer</text><text x="12" y="118" class="item">+ gesamt_ects: Integer</text><line x1="0" y1="130" x2="350" y2="130" class="line"/><text x="12" y="157" class="item">+ berechne_ects_aller_module()</text></g>
+  <g transform="translate(980 645)"><rect width="250" height="105" class="box"/><rect width="250" height="42" class="head" rx="8"/><text x="125" y="28" text-anchor="middle" class="name">Semester</text><line x1="0" y1="43" x2="250" y2="43" class="line"/><text x="12" y="73" class="item">+ semester_nummer</text></g>
+  <g transform="translate(1320 645)"><rect width="350" height="130" class="box"/><rect width="350" height="42" class="head" rx="8"/><text x="175" y="28" text-anchor="middle" class="name">Modul</text><line x1="0" y1="43" x2="350" y2="43" class="line"/><text x="12" y="70" class="item">+ modul_code: String</text><text x="12" y="94" class="item">+ name: String</text><text x="12" y="118" class="item">+ ects: Integer</text></g>
+
+  <g transform="translate(250 930)"><rect width="430" height="160" class="box"/><rect width="430" height="42" class="head" rx="8"/><text x="215" y="28" text-anchor="middle" class="name">ModulBelegung</text><line x1="0" y1="43" x2="430" y2="43" class="line"/><text x="12" y="70" class="item">- pruefungsleistung [0..1]</text><text x="12" y="94" class="item">+ /status: Modulstatus</text><line x1="0" y1="106" x2="430" y2="106" class="line"/><text x="12" y="136" class="item">+ pruefungsleistung_eintragen(note)</text></g>
+  <g transform="translate(780 930)"><rect width="390" height="160" class="box"/><rect width="390" height="42" class="head" rx="8"/><text x="195" y="28" text-anchor="middle" class="name">Pruefungsleistung</text><line x1="0" y1="43" x2="390" y2="43" class="line"/><text x="12" y="70" class="item">- __note: Decimal</text><text x="12" y="94" class="item">+ note: Float {readOnly}</text><text x="12" y="118" class="item">+ /bestanden: Boolean</text><text x="12" y="145" class="item">+ GUELTIGE_NOTEN</text></g>
+  <g transform="translate(1250 800)"><rect width="300" height="145" class="box"/><rect width="300" height="42" class="head" rx="8"/><text x="150" y="18" text-anchor="middle" class="stereo">&lt;&lt;enumeration&gt;&gt;</text><text x="150" y="37" text-anchor="middle" class="name">Modulstatus</text><line x1="0" y1="43" x2="300" y2="43" class="line"/><text x="12" y="72" class="item">OFFEN</text><text x="12" y="99" class="item">ABGESCHLOSSEN</text><text x="12" y="126" class="item">NICHT_BESTANDEN</text></g>
+  <g transform="translate(1250 1010)"><rect width="300" height="135" class="box"/><rect width="300" height="42" class="head" rx="8"/><text x="150" y="18" text-anchor="middle" class="stereo">&lt;&lt;enumeration&gt;&gt;</text><text x="150" y="37" text-anchor="middle" class="name">NotenzielStatus</text><line x1="0" y1="43" x2="300" y2="43" class="line"/><text x="12" y="70" class="item">KEINE_NOTEN</text><text x="12" y="96" class="item">ERREICHT</text><text x="12" y="122" class="item">NICHT_ERREICHT</text></g>
+
+  <path d="M375 190 H450" class="line dash" marker-end="url(#arrow)"/><text x="390" y="178" class="label">erzeugt</text>
+  <path d="M800 190 H875" class="line dash" marker-end="url(#arrow)"/><text x="817" y="178" class="label">rendert</text>
+  <path d="M1185 190 H1260" class="line dash" marker-end="url(#arrow)"/>
+  <path d="M625 253 V373" class="line" marker-end="url(#arrow)"/><text x="636" y="315" class="label">verwendet</text>
+  <path d="M765 445 H1020" class="line" marker-end="url(#arrow)"/><text x="830" y="433" class="label">lädt und speichert</text>
+  <path d="M505 518 V645" class="line" marker-end="url(#arrow)"/>
+  <path d="M1100 518 V900 H975 V930" class="line" marker-end="url(#arrow)"/>
+  <path d="M1635 253 V620 H490" class="line dash" marker-end="url(#arrow)"/><text x="1370" y="608" class="label">erzeugt Studienplan</text>
+  <path d="M490 730 H560" class="line" marker-end="url(#arrow)"/><text x="505" y="718" class="label">1</text>
+  <path d="M735 815 V855 H1105 V750" class="line" marker-start="url(#diamond)" marker-end="url(#arrow)"/><text x="750" y="844" class="label">1..*</text>
+  <path d="M1230 700 H1320" class="line" marker-start="url(#diamond)" marker-end="url(#arrow)"/><text x="1245" y="688" class="label">1..*</text>
+  <path d="M300 850 V930" class="line" marker-start="url(#openDiamond)" marker-end="url(#arrow)"/><text x="312" y="895" class="label">0..*</text>
+  <path d="M680 1000 H780" class="line" marker-start="url(#diamond)" marker-end="url(#arrow)"/><text x="708" y="988" class="label">0..1</text>
+  <path d="M680 970 C900 835 1110 795 1320 735" class="line" marker-end="url(#arrow)"/><text x="980" y="835" class="label">verweist auf 1 Modul</text>
+  <path d="M680 940 V880 H1250" class="line dash" marker-end="url(#arrow)"/><text x="900" y="868" class="label">liefert Status</text>
+  <path d="M190 850 V1170 H1200 V1080 H1250" class="line dash" marker-end="url(#arrow)"/><text x="700" y="1158" class="label">liefert Notenzielstatus</text>
+
+  <text x="900" y="1230" text-anchor="middle" class="label">Durchgezogene Pfeile zeigen Nutzung oder Assoziation; Rauten zeigen Aggregation bzw. Komposition; gestrichelte Pfeile zeigen Abhängigkeiten.</text>
+</svg>

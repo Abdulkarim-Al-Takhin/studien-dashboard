@@ -72,6 +72,19 @@ select:focus {
     margin-top: 0;
 }
 
+.status-negativ {
+    color:#f28b82;
+}
+
+.status-positiv {
+    color: #81c995;
+}
+
+.fehlermeldung {
+    color: #f28b82;
+    font-weight: bold;
+}
+
 .kennzahl-wert{
     display: block;
     margin-top: 8px;

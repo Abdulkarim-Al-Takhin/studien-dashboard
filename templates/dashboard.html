@@ -50,8 +50,28 @@
             <p>Aktueller Notendurchschnitt: Noch keine Noten vorhanden</p>
         {% endif %}
 
-        <p> Zielnotendurchschnitt: {{ student.ziel_notendurchschnitt }}</p>
-        <p><strong>{{ notenziel_status }}</strong></p>
+        <p> Zielnotendurchschnitt:
+            {{ student.ziel_notendurchschnitt }}
+        </p>
+
+        {% if durchschnitt is none %}
+            <p>
+                <strong>{{ notenziel_status }}</strong>
+            </p>
+        {% elif durchschnitt <= student.ziel_notendurchschnitt%}
+           <p>
+                <strong class="status-positiv">
+                    {{ notenziel_status }}
+                </strong>
+            </p>
+
+        {% else %}
+            <p>
+                 <strong class="status-negativ">
+                    {{ notenziel_status }}
+                 </strong>
+            </p>
+        {% endif %}
     </section>
 
     <section class="kennzahl-karte">
@@ -117,13 +137,13 @@
                 action="{{ url_for('pruefungsleistung_eintragen') }}"
         >
             <p>
-                <label for="modul_id">Modul auswählen:</label>
+                <label for="modul_code">Modul auswählen:</label>
 
-                <select id="modul_id" name="modul_id" required>
+                <select id="modul_code" name="modul_code" required>
                     {% for semester in student.studiengang.semester_liste %}
-                    <optgroup label="Semester {{ semester.semester_nr }}">
+                    <optgroup label="Semester {{ semester.semester_nummer }}">
                         {% for modul in semester.modul_liste %}
-                        <option value="{{ modul.modul_id }}">
+                        <option value="{{ modul.modul_code }}">
                             {{ modul.name }}
                         </option>
                         {% endfor %}
@@ -135,14 +155,17 @@
             <p>
                 <label for="note">Note:</label>
 
-                <input
-                        type="text"
-                        id="note"
-                        name="note"
-                        placeholder="zum Beispiel 1,7"
-                        required
-                >
+                <select id="note" name="note" required>
+                    <option value="" selected disabled>Note auswählen</option>
+                    {% for note in gueltige_noten %}
+                    <option value="{{ note }}">{{ "%.1f"|format(note)|replace(".", ",") }}</option>
+                    {% endfor %}
+                </select>
             </p>
+
+            {% if fehlermeldung %}
+            <p class="fehlermeldung" role="alert">{{ fehlermeldung }}</p>
+            {% endif %}
 
             <button type="submit">Prüfungsleistung speichern</button>
         </form>
@@ -151,7 +174,7 @@
 
         <details>
             <summary>
-                <strong>Semester {{ semester.semester_nr }}</strong>
+                <strong>Semester {{ semester.semester_nummer }}</strong>
             </summary>
 
             <table>
@@ -169,8 +192,8 @@
                 <tr>
                     <td>{{ modul.name }}</td>
                     <td>{{ modul.ects }}</td>
-                    <td>{{ modul.status }}</td>
-                    <td>{{ noten.get(modul.modul_id, "-") }}</td>
+                    <td>{{ modulstatus.get(modul.modul_code, "Offen") }}</td>
+                    <td>{{ noten.get(modul.modul_code, "-") }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>

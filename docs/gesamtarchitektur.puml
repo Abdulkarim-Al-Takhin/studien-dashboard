@@ -1,0 +1,101 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+left to right direction
+
+package "Programmeinstieg und Aufbau" {
+  class "app.py" as App <<module>> {
+    + create_app(student=None, repository=None): Flask
+  }
+  class "study_plan.py" as StudyPlan <<module>> {
+    + erstelle_student_mit_studienplan(): Student
+  }
+}
+
+package "Web und Darstellung" {
+  class DashboardController {
+    - service: DashboardService
+    + registriere_routen(app): None
+    + dashboard(): Response
+    + pruefungsleistung_eintragen(): Response
+  }
+  class "dashboard.html" as View <<view>>
+  class "style.css" as Stylesheet <<stylesheet>>
+}
+
+package "Anwendungslogik" {
+  class DashboardService {
+    - student: Student
+    - repository: PruefungsleistungRepository
+    + lade_pruefungsleistungen(): None
+    + pruefungsleistung_eintragen(modul_code, note): None
+    + dashboard_daten(heute=None): Dict
+  }
+}
+
+package "Persistenz" {
+  class PruefungsleistungRepository {
+    + dateipfad: Path
+    + laden(): Dict<String, Pruefungsleistung>
+    + speichern(pruefungsleistungen): None
+  }
+  class "pruefungsleistungen.json" as JSON <<file>>
+}
+
+package "Domain" {
+  class Student {
+    + name: String
+    + matrikel_nr: String
+    + start_datum: Date
+    + ziel_notendurchschnitt: Float
+    + berechne_notendurchschnitt(): Float [0..1]
+    + berechne_abgeschlossene_ects(): Integer
+    + finde_modulbelegung(modul_code): ModulBelegung [0..1]
+  }
+  class Studiengang {
+    + studienfach: String
+    + dauer_monate: Integer
+    + gesamt_ects: Integer
+    + berechne_ects_aller_module(): Integer
+  }
+  class Semester { + semester_nummer: Integer }
+  class Modul {
+    + modul_code: String
+    + name: String
+    + ects: Integer
+  }
+  class ModulBelegung {
+    - pruefungsleistung: Pruefungsleistung [0..1]
+    + status: Modulstatus
+    + pruefungsleistung_eintragen(note): None
+  }
+  class Pruefungsleistung {
+    - note: Decimal
+    + note: Float {readOnly}
+    + bestanden: Boolean {readOnly}
+  }
+  enum Modulstatus { OFFEN; ABGESCHLOSSEN; NICHT_BESTANDEN }
+  enum NotenzielStatus { KEINE_NOTEN; ERREICHT; NICHT_ERREICHT }
+}
+
+App ..> StudyPlan : ruft auf
+App ..> PruefungsleistungRepository : erzeugt
+App ..> DashboardService : erzeugt
+App ..> DashboardController : erzeugt / registriert
+StudyPlan ..> Student : erzeugt Objektstruktur
+DashboardController --> DashboardService : verwendet
+DashboardController ..> View : rendert
+View ..> Stylesheet : bindet ein
+DashboardService --> Student : wertet aus / aktualisiert
+DashboardService --> PruefungsleistungRepository : lädt / speichert
+PruefungsleistungRepository --> Pruefungsleistung : erzeugt / speichert
+PruefungsleistungRepository --> JSON : liest / schreibt
+Student "0..*" --> "1" Studiengang
+Student "1" o-- "0..*" ModulBelegung
+Studiengang "1" *-- "1..*" Semester
+Semester "1" *-- "1..*" Modul
+ModulBelegung "0..*" --> "1" Modul
+ModulBelegung "1" *-- "0..1" Pruefungsleistung
+ModulBelegung ..> Modulstatus
+Student ..> NotenzielStatus
+@enduml
