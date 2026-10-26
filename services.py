@@ -2,9 +2,7 @@
 
 import calendar
 from datetime import date
-
 from models import Pruefungsleistung
-
 
 class DashboardService:
     def __init__(self, student, repository):
@@ -12,19 +10,30 @@ class DashboardService:
         self.repository = repository
 
     def lade_pruefungsleistungen(self):
-        """Überträgt gespeicherte Prüfungsleistungen in passende Belegungen."""
-        for modul_code, pruefungsleistung in self.repository.laden().items():
+        """
+        Hier findet das 'Matching' statt, das der Tutor sehen möchte:
+        Daten aus dem Repo (Dict) -> Zuordnung zu ModulBelegungen (Objekte).
+        """
+        noten_daten = self.repository.laden() # Erhält Dict { 'CODE': note }
+
+        for modul_code, note in noten_daten.items():
             belegung = self.student.finde_modulbelegung(modul_code)
-            if belegung is None:
-                raise ValueError(f"Unbekannter Modulcode in der Datendatei: {modul_code}")
-            belegung.pruefungsleistung_eintragen(pruefungsleistung.note)
+            if belegung:
+                # Hier wird die Note dem Domain-Objekt zugewiesen
+                belegung.pruefungsleistung_eintragen(note)
+            else:
+                print(f"Warnung: Modul {modul_code} nicht im Studienplan gefunden.")
 
     def pruefungsleistung_eintragen(self, modul_code, note):
         """Validiert, übernimmt und speichert eine Prüfungsleistung."""
         belegung = self.student.finde_modulbelegung(modul_code)
         if belegung is None:
             raise ValueError("Die ausgewählte Modulbelegung wurde nicht gefunden.")
+
+        # Zuweisung an das Domain-Objekt (löst Validierung in models.py aus)
         belegung.pruefungsleistung_eintragen(note)
+
+        # Speichern der aktuellen Noten-Liste (Matching in umgekehrter Richtung)
         self.repository.speichern(self._vorhandene_pruefungsleistungen())
 
     def dashboard_daten(self, heute=None):
@@ -58,18 +67,19 @@ class DashboardService:
             "durchschnitt": self.student.berechne_notendurchschnitt(),
             "notenziel_status": self.student.notenziel_status.value,
             "abgeschlossene_ects": abgeschlossene_ects,
-            "ects_fortschritt_prozent": round(abgeschlossene_ects / gesamt_ects * 100, 1),
+            "ects_fortschritt_prozent": round(abgeschlossene_ects / gesamt_ects * 100, 1) if gesamt_ects > 0 else 0,
             "erfasste_gesamt_ects": erfasste_gesamt_ects,
             "studienplan_vollstaendig": erfasste_gesamt_ects == gesamt_ects,
             "soll_ects": soll_ects,
             "ects_differenz": ects_differenz,
             "fortschritt_status": fortschritt_status,
-            "gueltige_noten": [float(note) for note in Pruefungsleistung.GUELTIGE_NOTEN],
+            "gueltige_noten": Pruefungsleistung.GUELTIGE_NOTEN,
         }
 
     def _vorhandene_pruefungsleistungen(self):
+        """Hilfsmethode, um Noten für das Repository zu sammeln."""
         return {
-            belegung.modul.modul_code: belegung.pruefungsleistung
+            belegung.modul.modul_code: belegung.pruefungsleistung.note
             for belegung in self.student.modulbelegungen
             if belegung.pruefungsleistung is not None
         }
@@ -85,5 +95,5 @@ class DashboardService:
 
         gesamte_tage = (ende - start).days
         vergangene_tage = min(max((heute - start).days, 0), gesamte_tage)
-        zeitanteil = vergangene_tage / gesamte_tage
+        zeitanteil = vergangene_tage / gesamte_tage if gesamte_tage > 0 else 0
         return round(zeitanteil * self.student.studiengang.gesamt_ects, 1)

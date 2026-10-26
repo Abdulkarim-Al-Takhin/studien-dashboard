@@ -1,10 +1,18 @@
 [
   {
-    "modul_code": "DLBDSIPWP01_D",
-    "note": 1.7
+    "modul_code": "DLBBIM01",
+    "note": 3.3
   },
   {
     "modul_code": "DLBBIMD01",
     "note": 3.6
+  },
+  {
+    "modul_code": "DLBDSEAIS01-01_D",
+    "note": 5.0
+  },
+  {
+    "modul_code": "DLBDSIPWP01_D",
+    "note": 1.7
   }
 ]
