@@ -1,6 +1,5 @@
 """Domainmodell des Studien-Dashboards."""
 
-from decimal import Decimal, InvalidOperation
 from enum import Enum
 
 
@@ -104,35 +103,38 @@ class Modul:
 
 
 class Pruefungsleistung:
-    """Eine validierte und nach der Erzeugung unveränderliche Prüfungsnote."""
+    """Speichert eine geprüfte Note mit lesendem Zugriff."""
 
     GUELTIGE_NOTEN = tuple(
-        Decimal(zehntel) / Decimal("10") for zehntel in range(10, 41)
-    ) + (Decimal("5.0"),)
+        zehntel / 10 for zehntel in range(10, 41)
+    ) + (5.0,)
+
     BESTANDENE_NOTEN = GUELTIGE_NOTEN[:-1]
 
     def __init__(self, note):
         try:
-            validierte_note = Decimal(str(note).replace(",", "."))
-        except (InvalidOperation, ValueError):
-            raise ValueError("Die eingegebene Note ist ungültig.") from None
+            validierte_note = float(str(note).replace(",", "."))
+        except (ValueError, TypeError):
+            raise ValueError(
+                "Die eingegebene Note ist ungültig."
+            ) from None
 
         if validierte_note not in self.GUELTIGE_NOTEN:
-            erlaubte_werte = ", ".join(
-                str(wert).replace(".", ",") for wert in self.GUELTIGE_NOTEN
+            raise ValueError(
+                "Erlaubt sind Noten von 1,0 bis 4,0 "
+                "in Zehntelschritten sowie 5,0."
             )
-            raise ValueError(f"Zulässige Noten sind: {erlaubte_werte}.")
 
         self.__note = validierte_note
 
     @property
     def note(self):
-        """Gibt die validierte Note für Anzeige und Berechnungen zurück."""
-        return float(self.__note)
+        """Gibt die gespeicherte Note zurück."""
+        return self.__note
 
     @property
     def bestanden(self):
-        """Gibt an, ob die Note zum Katalog der bestandenen Noten gehört."""
+        """Zeigt an, ob die Prüfung bestanden wurde."""
         return self.__note in self.BESTANDENE_NOTEN
 
 
