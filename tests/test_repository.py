@@ -12,11 +12,11 @@ class PruefungsleistungRepositoryTests(unittest.TestCase):
     def test_speichern_und_laden(self):
         with tempfile.TemporaryDirectory() as verzeichnis:
             repository = PruefungsleistungRepository(Path(verzeichnis) / "noten.json")
-            repository.speichern({"MODUL-1": Pruefungsleistung(2.4)})
+            repository.speichern({"MODUL-1": 2.4})
 
             geladene_daten = repository.laden()
 
-            self.assertEqual(2.4, geladene_daten["MODUL-1"].note)
+            self.assertEqual(2.4, geladene_daten["MODUL-1"])
 
     def test_fehlende_datei_liefert_leeres_mapping(self):
         with tempfile.TemporaryDirectory() as verzeichnis:

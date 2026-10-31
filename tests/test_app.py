@@ -31,7 +31,7 @@ class DashboardAppTests(unittest.TestCase):
             data={"modul_code": "DLBDSEAIS01-01_D", "note": "3,6"},
         )
         self.assertEqual(302, response.status_code)
-        self.assertEqual(3.6, self.repository.laden()["DLBDSEAIS01-01_D"].note)
+        self.assertEqual(3.6, self.repository.laden()["DLBDSEAIS01-01_D"])
 
     def test_unzulaessige_note_wird_abgewiesen(self):
         response = self.client.post(
